@@ -11,12 +11,12 @@ const web = new WebClient(process.env.SLACK_TOKEN);
 const router = express.Router();
 
 router.get("/", (req, res) => {
-  console.log("hello");
+  console.log("hello get", { req });
   res.json({ username: "Flavio" });
 });
 
 router.post("/", (req, res) => {
-  console.log("hello", { body: req.body });
+  console.log("hello post", { req });
   const { channel_id, text } = req.body;
   console.log({ channel_id, text });
   postStuff(channel_id, text);
