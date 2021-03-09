@@ -1,4 +1,6 @@
 const express = require("express");
+const serverless = require("serverless-http");
+const bodyParser = require("body-parser");
 const app = express();
 const port = 3000;
 
@@ -14,18 +16,26 @@ const { WebClient } = require("@slack/web-api");
 // Create a new instance of the WebClient class with the token read from your environment variable
 const web = new WebClient(process.env.SLACK_TOKEN);
 
-app.get("/", (req, res) => {
+const router = express.Router();
+
+router.get("/", (req, res) => {
   console.log("hello");
   res.json({ username: "Flavio" });
 });
 
-app.post("/", (req, res) => {
+router.post("/", (req, res) => {
   console.log("hello", { body: req.body });
   const { channel_id, text } = req.body;
   console.log({ channel_id, text });
   postStuff(channel_id, text);
   res.end();
 });
+
+app.use(bodyParser.json());
+app.use("/.netlify/functions/server", router); // path must route to lambda
+
+module.exports = app;
+module.exports.handler = serverless(app);
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);
