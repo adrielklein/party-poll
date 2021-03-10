@@ -1,6 +1,5 @@
 const express = require("express");
 const serverless = require("serverless-http");
-const path = require("path");
 const bodyParser = require("body-parser");
 const app = express();
 
@@ -26,15 +25,11 @@ router.post("/", (req, res) => {
 });
 
 app.use(bodyParser.json());
+// app.use("/", (req, res) => res.sendFile(path.join(__dirname, "../index.html")));
 app.use("/.netlify/functions/server", router); // path must route to lambda
-app.use("/", (req, res) => res.sendFile(path.join(__dirname, "../index.html")));
 
 module.exports = app;
 module.exports.handler = serverless(app);
-
-// app.listen(port, () => {
-//   console.log(`Example app listening at http://localhost:${port}`);
-// });
 
 const reactionNames = [
   "green_heart",
