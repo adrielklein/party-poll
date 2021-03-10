@@ -15,7 +15,7 @@ router.get("/", (req, res) => {
   res.json({ username: "Flavio" });
 });
 
-router.post("/", (req, res) => {
+app.post("/", (req, res) => {
   console.log("hello post", { req });
   const { channel_id, text } = req.body;
   console.log({ channel_id, text });
