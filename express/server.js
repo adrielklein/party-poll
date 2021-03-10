@@ -1,4 +1,5 @@
 const express = require("express");
+const path = require("path");
 const serverless = require("serverless-http");
 const bodyParser = require("body-parser");
 const app = express();
@@ -25,7 +26,7 @@ router.post("/", (req, res) => {
 });
 
 app.use(bodyParser.json());
-// app.use("/", (req, res) => res.sendFile(path.join(__dirname, "../index.html")));
+app.use("/", (req, res) => res.sendFile(path.join(__dirname, "../index.html")));
 app.use("/.netlify/functions/server", router); // path must route to lambda
 
 module.exports = app;
