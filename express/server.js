@@ -30,14 +30,14 @@ router.get("/", (req, res) => {
 
 router.get("/another", (req, res) => res.json({ route: req.originalUrl }));
 
-router.post("/", (req, res) => {
+router.post("/", async (req, res) => {
   console.log("posting!!!");
   console.log({ slackToken: process.env.SLACK_TOKEN });
   const { body } = req;
   console.log({ body });
   const { channel_id, text } = body;
   console.log({ channel_id, text });
-  postStuff(channel_id, text);
+  await postStuff(channel_id, text);
   console.log("ending");
   res.end();
   console.log("ended");
