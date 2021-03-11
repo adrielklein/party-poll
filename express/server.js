@@ -2,12 +2,12 @@ const express = require("express");
 const path = require("path");
 const serverless = require("serverless-http");
 const bodyParser = require("body-parser");
-const app = express();
 const { createEventAdapter } = require("@slack/events-api");
+const { createServer } = require("http");
 
 const { WebClient } = require("@slack/web-api");
-const { Console } = require("console");
 
+const app = express();
 const slackSigningSecret = process.env.SLACK_SIGNING_SECRET;
 
 console.log({ slackSigningSecret });
@@ -43,7 +43,7 @@ router.post("/", (req, res) => {
   console.log("ended");
 });
 
-app.use("/slack/events", slackEvents.expressMiddleware());
+app.use("/slack/events", slackEvents.requestListener());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 app.use("/.netlify/functions/server", router); // path must route to lambda
