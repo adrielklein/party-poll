@@ -18,12 +18,16 @@ router.get("/", (req, res) => {
 router.get("/another", (req, res) => res.json({ route: req.originalUrl }));
 
 router.post("/", (req, res) => {
+  console.log("posting!!!");
+  console.log({ slackToken: process.env.SLACK_TOKEN });
   const { body } = req;
   console.log({ body });
   const { channel_id, text } = body;
   console.log({ channel_id, text });
   postStuff(channel_id, text);
+  console.log("ending");
   res.end();
+  console.log("ended");
 });
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -55,9 +59,11 @@ const reactionNames = [
 // ];
 
 const postStuff = async (channelId, text) => {
+  console.log("postStuff");
   const values = text
     .match(/\w+|"[^"]+"/g)
     .map((value) => value.replace(/\"|\'/g, ""));
+  console.log({ value });
   const options = values.splice(1);
 
   formattedOptions = options.map(
@@ -65,6 +71,7 @@ const postStuff = async (channelId, text) => {
   );
 
   try {
+    console.log("about to post");
     const { channel, message } = await web.chat.postMessage({
       channel: channelId,
       blocks: [
@@ -75,6 +82,7 @@ const postStuff = async (channelId, text) => {
         },
       ],
     });
+    console.log("posted", { channel, message });
     const { ts } = message;
     for (let i = 0; i < options.length; i++) {
       await web.reactions.add({
