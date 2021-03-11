@@ -63,8 +63,9 @@ const postStuff = async (channelId, text) => {
   const values = text
     .match(/\w+|"[^"]+"/g)
     .map((value) => value.replace(/\"|\'/g, ""));
-  console.log({ value });
+  console.log({ values });
   const options = values.splice(1);
+  console.log({ options });
 
   formattedOptions = options.map(
     (option, i) => `:${reactionNames[i]}: ${option}`
