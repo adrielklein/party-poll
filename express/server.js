@@ -27,7 +27,6 @@ router.get("/another", (req, res) => res.json({ route: req.originalUrl }));
 
 router.post("/", async (req, res) => {
   console.log("posting!!!");
-  console.log({ slackToken: process.env.SLACK_TOKEN });
   const { body } = req;
   console.log({ body });
   const { channel_id, text } = body;
