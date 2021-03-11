@@ -3,8 +3,17 @@ const path = require("path");
 const serverless = require("serverless-http");
 const bodyParser = require("body-parser");
 const app = express();
+const { createEventAdapter } = require("@slack/events-api");
 
 const { WebClient } = require("@slack/web-api");
+
+const slackSigningSecret = process.env.SLACK_SIGNING_SECRET;
+
+console.log({ slackSigningSecret });
+
+const slackEvents = createEventAdapter(process.env.SLACK_SIGNING_SECRET);
+console.log({ slackEvents });
+
 // Create a new instance of the WebClient class with the token read from your environment variable
 const web = new WebClient(process.env.SLACK_TOKEN);
 
@@ -30,6 +39,7 @@ router.post("/", (req, res) => {
   console.log("ended");
 });
 
+app.use("/slack/events", slackEvents.expressMiddleware());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 app.use("/.netlify/functions/server", router); // path must route to lambda
@@ -93,7 +103,7 @@ const postStuff = async (channelId, text) => {
       });
     }
   } catch (error) {
-    console.log(error);
+    console.log({ error });
   }
 
   console.log("Message posted!");
