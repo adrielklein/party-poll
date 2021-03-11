@@ -18,14 +18,16 @@ router.get("/", (req, res) => {
 router.get("/another", (req, res) => res.json({ route: req.originalUrl }));
 
 router.post("/", (req, res) => {
-  console.log("hello post", { req });
-  const { channel_id, text } = req.body;
+  const { body } = req;
+  console.log({ body });
+  const { channel_id, text } = body;
   console.log({ channel_id, text });
   postStuff(channel_id, text);
   res.end();
 });
 
-app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
 app.use("/.netlify/functions/server", router); // path must route to lambda
 app.use("/", (req, res) => res.sendFile(path.join(__dirname, "../index.html")));
 
