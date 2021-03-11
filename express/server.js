@@ -3,7 +3,6 @@ const path = require("path");
 const serverless = require("serverless-http");
 const bodyParser = require("body-parser");
 const { createEventAdapter } = require("@slack/events-api");
-const { createServer } = require("http");
 
 const { WebClient } = require("@slack/web-api");
 
