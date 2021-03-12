@@ -7,9 +7,9 @@ const { createEventAdapter } = require("@slack/events-api");
 const { WebClient } = require("@slack/web-api");
 
 const app = express();
-const slackSigningSecret = process.env.SLACK_SIGNING_SECRET;
+// const slackSigningSecret = process.env.SLACK_SIGNING_SECRET;
 
-const slackEvents = createEventAdapter(slackSigningSecret);
+// const slackEvents = createEventAdapter(slackSigningSecret);
 
 const botToken = process.env.SLACK_BOT_TOKEN;
 // Create a new instance of the WebClient class with the token read from your environment variable
