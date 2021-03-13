@@ -41,6 +41,7 @@ app.use("/slack/events", slackEvents.requestListener());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 app.use("/.netlify/functions/server", router); // path must route to lambda
+app.use(express.static("public"));
 app.use("/", (req, res) => res.sendFile(path.join(__dirname, "../index.html")));
 
 module.exports = app;
