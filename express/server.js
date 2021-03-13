@@ -79,7 +79,8 @@ const sendHelp = () =>
     ],
   });
 
-  const sendError = () => await web.chat.postMessage({
+const sendError = () =>
+  web.chat.postMessage({
     channel: channelId,
     response_type: "ephemeral",
     text: "Sorry friend :cry:",
@@ -89,7 +90,7 @@ const sendHelp = () =>
           "Max number of options is 10\nPlease try again with fewer options",
       },
     ],
-  })
+  });
 
 const createPoll = async (channelId, text) => {
   console.log("createPoll", { text });
