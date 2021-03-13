@@ -31,7 +31,7 @@ router.post("/", async (req, res) => {
   console.log({ body });
   const { channel_id, text } = body;
   console.log({ channel_id, text });
-  await postStuff(channel_id, text);
+  await createPoll(channel_id, text);
   console.log("ending");
   res.end();
   console.log("ended");
@@ -54,13 +54,10 @@ const reactionNames = [
   "partying_face",
   "birthday",
   "gift",
+  "cupcake",
   "laughing",
   "pinata",
-  "party-blob",
-  "cool-doge",
-  "aaw_yeah",
-  "bootleg_parrot",
-  "mario_luigi_dance",
+  "kissing_heart",
 ];
 
 const helpTextLines = [
@@ -70,26 +67,43 @@ const helpTextLines = [
   "Time to party :partying_face:",
 ];
 
-const postStuff = async (channelId, text) => {
-  console.log("postStuff", { text });
+const sendHelp = () =>
+  web.chat.postMessage({
+    channel: channelId,
+    response_type: "ephemeral",
+    text: "Hello friend :wave: Welcome to party poll :balloon:",
+    attachments: [
+      {
+        text: helpTextLines.join("\n"),
+      },
+    ],
+  });
+
+  const sendError = () => await web.chat.postMessage({
+    channel: channelId,
+    response_type: "ephemeral",
+    text: "Sorry friend :cry:",
+    attachments: [
+      {
+        text:
+          "Max number of options is 10\nPlease try again with fewer options",
+      },
+    ],
+  })
+
+const createPoll = async (channelId, text) => {
+  console.log("createPoll", { text });
   if (text === "help" || text === "") {
-    await web.chat.postMessage({
-      channel: channelId,
-      response_type: "ephemeral",
-      text: "Hello friend :wave: Welcome to party poll :balloon:",
-      attachments: [
-        {
-          text: helpTextLines.join("\n"),
-        },
-      ],
-    });
-    return;
+    return sendHelp();
   }
   const values = text
     .match(/\w+|"[^"]+"/g)
     .map((value) => value.replace(/\"|\'/g, ""));
   console.log({ values });
-  const options = values.length === 1 ? ["yes", "no"] : values.splice(1);
+  const options = values.length === 1 ? ["yes", "no"] : values;
+  if (options.length > 10) {
+    return sendError();
+  }
   console.log({ options });
 
   formattedOptions = options.map(
