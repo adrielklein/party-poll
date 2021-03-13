@@ -48,32 +48,48 @@ module.exports = app;
 module.exports.handler = serverless(app);
 
 const reactionNames = [
-  "green_heart",
-  "yellow_heart",
-  "blue_heart",
-  "purple_heart",
-  "orange_heart",
-  "heart",
+  "tada",
+  "balloon",
+  "confetti_ball",
+  "partying_face",
+  "birthday",
+  "gift",
+  "laughing",
+  "pinata",
+  "party-blob",
+  "cool-doge",
+  "aaw_yeah",
+  "bootleg_parrot",
+  "mario_luigi_dance",
 ];
 
-// const reactionNames = [
-//   "party-blob",
-//   "bootleg_parrot",
-//   "cool-doge",
-//   "mario_luigi_dance",
-//   "party_face",
-//   "tada",
-//   "confetti_ball",
-//   "aaw_yeah",
-// ];
+const helpTextLines = [
+  'Start poll via `/partypoll "Best color?" "red" "blue" "green"`',
+  "Watch as a poll is automatically created for you :tada:",
+  "Don't want to start a poll about colors? Use whatever values you want :confetti_ball:",
+  "Time to party :partying_face:",
+];
 
 const postStuff = async (channelId, text) => {
-  console.log("postStuff");
+  console.log("postStuff", { text });
+  if (text === "help" || text === "") {
+    await web.chat.postMessage({
+      channel: channelId,
+      response_type: "ephemeral",
+      text: "Hello friend :wave: Welcome to party poll :balloon:",
+      attachments: [
+        {
+          text: helpTextLines.join("\n"),
+        },
+      ],
+    });
+    return;
+  }
   const values = text
     .match(/\w+|"[^"]+"/g)
     .map((value) => value.replace(/\"|\'/g, ""));
   console.log({ values });
-  const options = values.splice(1);
+  const options = values.length === 1 ? ["yes", "no"] : values.splice(1);
   console.log({ options });
 
   formattedOptions = options.map(
