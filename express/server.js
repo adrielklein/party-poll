@@ -67,7 +67,7 @@ const helpTextLines = [
   "Time to party :partying_face:",
 ];
 
-const sendHelp = () =>
+const sendHelp = (channelId) =>
   web.chat.postMessage({
     channel: channelId,
     response_type: "ephemeral",
@@ -79,7 +79,7 @@ const sendHelp = () =>
     ],
   });
 
-const sendError = () =>
+const sendError = (channelId) =>
   web.chat.postMessage({
     channel: channelId,
     response_type: "ephemeral",
@@ -95,7 +95,7 @@ const sendError = () =>
 const createPoll = async (channelId, text) => {
   console.log("createPoll", { text });
   if (text === "help" || text === "") {
-    return sendHelp();
+    return sendHelp(channelId);
   }
   const values = text
     .match(/\w+|"[^"]+"/g)
@@ -103,7 +103,7 @@ const createPoll = async (channelId, text) => {
   console.log({ values });
   const options = values.length === 1 ? ["yes", "no"] : values.splice(1);
   if (options.length > 10) {
-    return sendError();
+    return sendError(channelId);
   }
   console.log({ options });
 
