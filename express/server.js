@@ -101,7 +101,7 @@ const createPoll = async (channelId, text) => {
     .match(/\w+|"[^"]+"/g)
     .map((value) => value.replace(/\"|\'/g, ""));
   console.log({ values });
-  const options = values.length === 1 ? ["yes", "no"] : values;
+  const options = values.length === 1 ? ["yes", "no"] : values.splice(1);
   if (options.length > 10) {
     return sendError();
   }
