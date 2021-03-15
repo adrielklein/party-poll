@@ -43,10 +43,10 @@ app.use(express.json());
 app.use("/.netlify/functions/server", router); // path must route to lambda
 app.use(express.static("public"));
 app.use("/privacy", (req, res) =>
-  res.sendFile(path.join(__dirname, "../public/html/privacy.html"))
+  res.sendFile(path.join(__dirname, "../html/privacy.html"))
 );
 app.use("/terms", (req, res) =>
-  res.sendFile(path.join(__dirname, "../public/html/terms.html"))
+  res.sendFile(path.join(__dirname, "../html/terms.html"))
 );
 app.use("/", (req, res) => res.sendFile(path.join(__dirname, "../index.html")));
 
