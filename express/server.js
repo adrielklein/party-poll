@@ -23,6 +23,10 @@ router.get("/", (req, res) => {
   res.json({ username: "Flavio" });
 });
 
+app.get("/auth", (req, res) => {
+  res.sendFile(__dirname + "../public/html/add_to_slack.html");
+});
+
 router.get("/another", (req, res) => res.json({ route: req.originalUrl }));
 
 router.post("/", async (req, res) => {
