@@ -28,14 +28,12 @@ router.get("/auth/redirect", (req, res) => {
   console.log({ env: process.env });
   var options = {
     uri:
-      "https://slack.com/api/oauth.access?code=" +
+      "https://slack.com/api/oauth.v2.access?code=" +
       req.query.code +
       "&client_id=" +
       process.env.CLIENT_ID +
       "&client_secret=" +
-      process.env.CLIENT_SECRET +
-      "&redirect_uri=" +
-      process.env.REDIRECT_URI,
+      process.env.CLIENT_SECRET,
     method: "GET",
   };
   request(options, (error, response, body) => {
