@@ -141,6 +141,20 @@ const createPoll = async (channelId, text) => {
 
   try {
     console.log("about to post");
+    const conversationsResponse = await web.conversations.join({
+      channel: channelId,
+    });
+    console.log("just joined channel", { conversationsResponse });
+    const { channel, message } = await web.chat.postMessage({
+      channel: channelId,
+      blocks: [
+        { type: "header", text: { type: "plain_text", text: values[0] } },
+        {
+          type: "section",
+          text: { type: "mrkdwn", text: formattedOptions.join("\n") },
+        },
+      ],
+    });
     const { channel, message } = await web.chat.postMessage({
       channel: channelId,
       blocks: [
