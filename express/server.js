@@ -121,6 +121,14 @@ const sendError = (channelId) =>
   });
 
 const createPoll = async (channelId, text) => {
+  try {
+    const conversationsResponse = await web.conversations.join({
+      channel: channelId,
+    });
+    console.log("just joined channel", { conversationsResponse });
+  } catch (error) {
+    console.log("error joining channel", { error });
+  }
   console.log("createPoll", { text });
   if (text === "help" || text === "") {
     return sendHelp(channelId);
@@ -141,10 +149,6 @@ const createPoll = async (channelId, text) => {
 
   try {
     console.log("about to post");
-    const conversationsResponse = await web.conversations.join({
-      channel: channelId,
-    });
-    console.log("just joined channel", { conversationsResponse });
     const { channel, message } = await web.chat.postMessage({
       channel: channelId,
       blocks: [
