@@ -159,16 +159,6 @@ const createPoll = async (channelId, text) => {
         },
       ],
     });
-    const { channel, message } = await web.chat.postMessage({
-      channel: channelId,
-      blocks: [
-        { type: "header", text: { type: "plain_text", text: values[0] } },
-        {
-          type: "section",
-          text: { type: "mrkdwn", text: formattedOptions.join("\n") },
-        },
-      ],
-    });
     console.log("posted", { channel, message });
     const { ts } = message;
     for (let i = 0; i < options.length; i++) {
