@@ -44,13 +44,13 @@ router.get("/auth/redirect", (req, res) => {
     var JSONresponse = JSON.parse(body);
     console.log({ redirectJsonResponse: JSONresponse });
     if (!JSONresponse.ok) {
-      console.log(JSONresponse);
+      console.log({ JSONresponse });
       res
         .send("Error encountered: \n" + JSON.stringify(JSONresponse))
         .status(200)
         .end();
     } else {
-      console.log(JSONresponse);
+      console.log({ JSONresponse });
       res.send("Success!");
     }
   });
