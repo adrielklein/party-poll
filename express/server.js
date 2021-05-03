@@ -13,6 +13,8 @@ const slackSigningSecret = process.env.SLACK_SIGNING_SECRET;
 const slackEvents = createEventAdapter(slackSigningSecret);
 
 const botToken = process.env.SLACK_BOT_TOKEN;
+
+console.log({ slackSigningSecret, botToken });
 // Create a new instance of the WebClient class with the token read from your environment variable
 // const web = new WebClient(process.env.SLACK_TOKEN);
 const web = new WebClient(botToken);
@@ -25,6 +27,7 @@ router.get("/", (req, res) => {
 });
 
 router.get("/auth/redirect", (req, res) => {
+  console.log("redirect", { req, res });
   console.log({ env: process.env });
   var options = {
     uri:
@@ -36,8 +39,10 @@ router.get("/auth/redirect", (req, res) => {
       process.env.CLIENT_SECRET,
     method: "GET",
   };
+  console.log({ redirectOptions: options });
   request(options, (error, response, body) => {
     var JSONresponse = JSON.parse(body);
+    console.log({ redirectJsonResponse: JSONresponse });
     if (!JSONresponse.ok) {
       console.log(JSONresponse);
       res
