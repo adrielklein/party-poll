@@ -100,8 +100,9 @@ const helpTextLines = [
   "Time to party :partying_face:",
 ];
 
-const sendHelp = (channelId) =>
-  web.chat.postMessage({
+const sendHelp = (channelId) => {
+  console.log("sending help", { channelId });
+  return web.chat.postMessage({
     channel: channelId,
     response_type: "ephemeral",
     text: "Hello friend :wave: Welcome to party poll :balloon:",
@@ -111,9 +112,11 @@ const sendHelp = (channelId) =>
       },
     ],
   });
+};
 
-const sendError = (channelId) =>
-  web.chat.postMessage({
+const sendError = (channelId) => {
+  console.log("sending error", { channelId });
+  return web.chat.postMessage({
     channel: channelId,
     response_type: "ephemeral",
     text: "Sorry friend :cry:",
@@ -124,6 +127,7 @@ const sendError = (channelId) =>
       },
     ],
   });
+};
 
 const createPoll = async (channelId, text) => {
   // try {
