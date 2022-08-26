@@ -94,7 +94,7 @@ const reactionNames = [
 ];
 
 const helpTextLines = [
-  'Start poll via `/partypoll "Best color?" "red" "blue" "green"`',
+  'Start poll via slash command such as `/partypoll "What is the best color?" "red" "blue" "green"`',
   "Watch as a poll is automatically created for you :tada:",
   "Don't want to start a poll about colors? Use whatever values you want :confetti_ball:",
   "Time to party :partying_face:",
@@ -142,7 +142,7 @@ const createPoll = async (channelId, text) => {
   if (text === "help" || text === "") {
     return sendHelp(channelId);
   }
-  const values = text
+  const values = text.replace(/\“|\”|\〝|\〞/g, "\"") // Convert irregular quotes to regular ones
     .match(/\w+|"[^"]+"/g)
     .map((value) => value.replace(/\"|\'|\“|\”|\”|\〝|\〞/g, ""));
   console.log({ values });
