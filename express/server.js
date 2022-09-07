@@ -45,6 +45,7 @@ router.get("/auth/redirect", (req, res) => {
       client_secret: process.env.CLIENT_SECRET,
     },
   }).then(function (response) {
+    console.log('response.data', response.data)
     console.log('got respose back from /auth.v2.access', response)
     web = new WebClient(response.data.access_token)
   })
