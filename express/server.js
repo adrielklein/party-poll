@@ -3,6 +3,7 @@ const path = require("path");
 const serverless = require("serverless-http");
 const bodyParser = require("body-parser");
 var request = require("request");
+const axios = require('axios');
 const { createEventAdapter } = require("@slack/events-api");
 
 const { WebClient } = require("@slack/web-api");
@@ -16,8 +17,9 @@ const botToken = process.env.SLACK_BOT_TOKEN;
 
 console.log({ slackSigningSecret, botToken });
 // Create a new instance of the WebClient class with the token read from your environment variable
+// this will later get changed during redirect (hopefully)
 // const web = new WebClient(process.env.SLACK_TOKEN);
-const web = new WebClient(botToken);
+let web = new WebClient(botToken);
 
 const router = express.Router();
 
@@ -40,20 +42,19 @@ router.get("/auth/redirect", (req, res) => {
     method: "GET",
   };
   console.log({ redirectOptions: options });
-  request(options, (error, response, body) => {
-    var JSONresponse = JSON.parse(body);
-    console.log({ redirectJsonResponse: JSONresponse });
-    if (!JSONresponse.ok) {
-      console.log({ JSONresponse });
-      res
-        .send("Error encountered: \n" + JSON.stringify(JSONresponse))
-        .status(200)
-        .end();
-    } else {
-      console.log({ JSONresponse });
-      res.send("Success!");
-    }
-  });
+  axios.get("https://slack.com/api/oauth.v2.access", {
+    params: {
+      code: req.query.code,
+      client_id: process.env.CLIENT_ID,
+      client_secret: process.env.CLIENT_SECRET,
+    },
+  }).then(function (response) {
+    console.log('got respose back from /auth.v2.access', response)
+    web = new WebClient(response.data.access_token)
+  })
+  .catch(function (error) {
+    console.log("error hitting /oauth.v2.access",error);
+  })
 });
 
 router.get("/another", (req, res) => res.json({ route: req.originalUrl }));
