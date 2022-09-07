@@ -8,7 +8,7 @@ const { createEventAdapter } = require("@slack/events-api");
 const { WebClient } = require("@slack/web-api");
 
 const app = express();
-const slackSigningSecret = process.env.SLACK_SIGNING_SECRET;
+const slackSigningSecret ="918e4bbd0c0af46ac9163f4a1e413ad3";
 
 const slackEvents = createEventAdapter(slackSigningSecret);
 
@@ -30,17 +30,14 @@ router.get("/", (req, res) => {
 router.get("/auth/redirect", (req, res) => {
   console.log("redirect", { req, res });
   console.log({ env: process.env });
-  var options = {
-    uri:
-      "https://slack.com/api/oauth.v2.access?code=" +
-      req.query.code +
-      "&client_id=" +
-      process.env.CLIENT_ID +
-      "&client_secret=" +
-      process.env.CLIENT_SECRET,
-    method: "GET",
-  };
-  console.log({ redirectOptions: options });
+  console.log('making call to oauth.v2.access with',{
+    params: {
+      code: req.query.code,
+      client_id: process.env.CLIENT_ID,
+      client_secret: process.env.CLIENT_SECRET,
+    },
+  } )
+
   axios.get("https://slack.com/api/oauth.v2.access", {
     params: {
       code: req.query.code,
