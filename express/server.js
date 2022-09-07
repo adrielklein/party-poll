@@ -2,7 +2,6 @@ const express = require("express");
 const path = require("path");
 const serverless = require("serverless-http");
 const bodyParser = require("body-parser");
-var request = require("request");
 const axios = require('axios');
 const { createEventAdapter } = require("@slack/events-api");
 
