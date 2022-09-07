@@ -48,6 +48,7 @@ router.get("/auth/redirect", (req, res) => {
     console.log('response.data', response.data)
     console.log('got respose back from /auth.v2.access', response)
     web = new WebClient(response.data.access_token)
+    res.send('App installed successfully!')
   })
   .catch(function (error) {
     console.log("error hitting /oauth.v2.access",error);
