@@ -4,8 +4,25 @@ const serverless = require("serverless-http");
 const bodyParser = require("body-parser");
 const axios = require('axios');
 const { createEventAdapter } = require("@slack/events-api");
-var LocalStorage = require('node-localstorage').LocalStorage;
-localStorage = new LocalStorage('./scratch');
+const fs = require('fs');
+
+const data = {
+  accessToken: 'none',
+}
+fs.writeFile('/token.json', JSON.stringify(data), (err) => {  
+  // Catch this!
+  if (err) throw err;
+
+  console.log('Data saved!');
+});
+
+async function getAccessToken() {
+  const fsPromises = require('fs').promises;
+  const data = await fsPromises.readFile('/token.json')
+                     .catch((err) => console.error('Failed to read file', err));
+
+  return JSON.parse(data.toString()).accessToken;
+}
 
 const { WebClient } = require("@slack/web-api");
 
@@ -49,8 +66,12 @@ router.get("/auth/redirect", (req, res) => {
     console.log('response.data', response.data)
     console.log('got respose back from /auth.v2.access', response)
     console.log('setting up WebClient with this token', response.data.access_token)
-    localStorage.setItem('accessToken', 'response.data.access_token');
-
+    fs.writeFile('token.json', JSON.stringify({accessToken: response.data.access_token}), (err) => {  
+      // Catch this!
+      if (err) throw err;
+    
+      console.log('Data saved!');
+    });
     res.send('App installed successfully!')
   })
   .catch(function (error) {
@@ -105,7 +126,7 @@ const helpTextLines = [
 const sendHelp = (channelId) => {
   console.log("sending help", { channelId });
   return web.chat.postMessage({
-    token: localStorage.getItem('accessToken'),
+    token: getAccessToken(),
     channel: channelId,
     response_type: "ephemeral",
     text: "Hello friend :wave: Welcome to party poll :balloon:",
@@ -120,7 +141,7 @@ const sendHelp = (channelId) => {
 const sendError = (channelId) => {
   console.log("sending error", { channelId });
   return web.chat.postMessage({
-    token: localStorage.getItem('accessToken'),
+    token: getAccessToken(),
     channel: channelId,
     response_type: "ephemeral",
     text: "Sorry friend :cry:",
@@ -136,7 +157,7 @@ const sendError = (channelId) => {
 const createPoll = async (channelId, text) => {
   try {
     const conversationsResponse = await web.conversations.join({
-      token: localStorage.getItem('accessToken'),
+      token: getAccessToken(),
       channel: channelId,
     });
     console.log("just joined channel", { conversationsResponse });
@@ -164,7 +185,7 @@ const createPoll = async (channelId, text) => {
   try {
     console.log("about to post");
     const { channel, message } = await web.chat.postMessage({
-      token: localStorage.getItem('accessToken'),
+      token: getAccessToken(),
       channel: channelId,
       blocks: [
         { type: "header", text: { type: "plain_text", text: values[0] } },
@@ -178,7 +199,7 @@ const createPoll = async (channelId, text) => {
     const { ts } = message;
     for (let i = 0; i < options.length; i++) {
       await web.reactions.add({
-        token: localStorage.getItem('accessToken'),
+        token: getAccessToken(),
         channel,
         name: reactionNames[i],
         timestamp: ts,
