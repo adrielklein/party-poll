@@ -18,7 +18,7 @@ console.log({ slackSigningSecret, botToken });
 // Create a new instance of the WebClient class with the token read from your environment variable
 // this will later get changed during redirect (hopefully)
 // const web = new WebClient(process.env.SLACK_TOKEN);
-let web = new WebClient(botToken);
+let web;
 
 const router = express.Router();
 
@@ -47,6 +47,7 @@ router.get("/auth/redirect", (req, res) => {
   }).then(function (response) {
     console.log('response.data', response.data)
     console.log('got respose back from /auth.v2.access', response)
+    console.log('setting up WebClient with this token', response.data.access_token)
     web = new WebClient(response.data.access_token)
     res.send('App installed successfully!')
   })
