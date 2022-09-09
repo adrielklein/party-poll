@@ -4,25 +4,8 @@ const serverless = require("serverless-http");
 const bodyParser = require("body-parser");
 const axios = require('axios');
 const { createEventAdapter } = require("@slack/events-api");
-const fs = require('fs');
 
-const data = {
-  accessToken: 'none',
-}
-fs.writeFile('/token.json', JSON.stringify(data), (err) => {  
-  // Catch this!
-  if (err) throw err;
 
-  console.log('Data saved!');
-});
-
-async function getAccessToken() {
-  const fsPromises = require('fs').promises;
-  const data = await fsPromises.readFile('/token.json')
-                     .catch((err) => console.error('Failed to read file', err));
-
-  return JSON.parse(data.toString()).accessToken;
-}
 
 const { WebClient } = require("@slack/web-api");
 
@@ -66,12 +49,7 @@ router.get("/auth/redirect", (req, res) => {
     console.log('response.data', response.data)
     console.log('got respose back from /auth.v2.access', response)
     console.log('setting up WebClient with this token', response.data.access_token)
-    fs.writeFile('token.json', JSON.stringify({accessToken: response.data.access_token}), (err) => {  
-      // Catch this!
-      if (err) throw err;
-    
-      console.log('Data saved!');
-    });
+    // set up client here
     res.send('App installed successfully!')
   })
   .catch(function (error) {
@@ -102,6 +80,8 @@ app.use("/", (req, res) => res.sendFile(path.join(__dirname, "../index.html")));
 
 module.exports = app;
 module.exports.handler = serverless(app);
+
+const getAccessToken = () => 'fakeToken'
 
 const reactionNames = [
   "tada",
